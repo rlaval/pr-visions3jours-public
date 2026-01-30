@@ -5,34 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévisions météo à trois jours – MeteoAveyron</title>
 <style>
-/* ===== TYPOGRAPHIE ET FOND ===== */
+/* ===== TYPOGRAPHIE ET FOND GLOBAL ===== */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f8;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   color: #333;
-  text-align: center;
+  background: url('https://www.jet-lag-trips.com/wp-content/uploads/2018/05/paysages-aveyron.jpg') center/cover no-repeat;
+  position: relative;
 }
-h1 {
-  font-size: 32px;
-  color: #1e88e5;
-  margin-bottom: 8px;
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  backdrop-filter: blur(12px); /* flou sur toute la page */
+  z-index: 0;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: relative;
+  z-index: 1;
+  padding: 60px 0 20px 0;
+  text-align: center; /* centré par rapport aux cartes */
+}
+header h1, header h2 {
+  color: #fff;
+  margin: 0;
+}
+header h1 {
+  font-size: 36px;
   letter-spacing: 1px;
 }
-h2 {
-  font-size: 18px;
-  color: #555;
+header h2 {
+  font-size: 20px;
   font-weight: 400;
-  margin-bottom: 40px;
+  margin-top: 10px;
 }
 
 /* ===== CONTAINER 3 JOURS ===== */
+.forecast-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
 .forecast {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
+  gap: 60px; /* cartes plus espacées */
 }
 
 /* ===== CARTES DES JOURS ===== */
@@ -52,7 +76,7 @@ h2 {
 /* ===== DATE ===== */
 .day-card .date {
   font-weight: 700;
-  color: #000; /* noir */
+  color: #000;
   margin-bottom: 20px;
   font-size: 18px;
 }
@@ -70,7 +94,7 @@ h2 {
   transition: transform 0.4s ease;
 }
 .day-card:hover .icon img {
-  transform: scale(1.15); /* grandit légèrement au hover */
+  transform: scale(1.15);
 }
 
 /* ===== DESCRIPTION ===== */
@@ -95,24 +119,28 @@ h2 {
 </head>
 <body>
 
-<h1>Prévisions météo à trois jours</h1>
-<h2>Prévisions expertisées et actualisées chaque jour</h2>
+<header>
+  <h1>Prévisions météo à trois jours</h1>
+  <h2>Prévisions expertisées et actualisées chaque jour</h2>
+</header>
 
-<div class="forecast">
-  <div class="day-card" id="day1">
-    <div class="date" id="date1"></div>
-    <div class="icon"><img id="icon1" src=""></div>
-    <div class="desc" id="desc1"></div>
-  </div>
-  <div class="day-card" id="day2">
-    <div class="date" id="date2"></div>
-    <div class="icon"><img id="icon2" src=""></div>
-    <div class="desc" id="desc2"></div>
-  </div>
-  <div class="day-card" id="day3">
-    <div class="date" id="date3"></div>
-    <div class="icon"><img id="icon3" src=""></div>
-    <div class="desc" id="desc3"></div>
+<div class="forecast-container">
+  <div class="forecast">
+    <div class="day-card" id="day1">
+      <div class="date" id="date1"></div>
+      <div class="icon"><img id="icon1" src=""></div>
+      <div class="desc" id="desc1"></div>
+    </div>
+    <div class="day-card" id="day2">
+      <div class="date" id="date2"></div>
+      <div class="icon"><img id="icon2" src=""></div>
+      <div class="desc" id="desc2"></div>
+    </div>
+    <div class="day-card" id="day3">
+      <div class="date" id="date3"></div>
+      <div class="icon"><img id="icon3" src=""></div>
+      <div class="desc" id="desc3"></div>
+    </div>
   </div>
 </div>
 
