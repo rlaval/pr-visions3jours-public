@@ -11,16 +11,22 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
-  background: url('https://www.jet-lag-trips.com/wp-content/uploads/2018/05/paysages-aveyron.jpg') center/cover no-repeat;
-  position: relative;
-  min-height: 100vh;
 }
-body::before {
+
+/* CONTENEUR DU FOND FLOU */
+.background-blur {
+  position: relative;
+  background: url('https://www.jet-lag-trips.com/wp-content/uploads/2018/05/paysages-aveyron.jpg') center/cover no-repeat;
+  overflow: hidden;
+}
+
+.background-blur::before {
   content: '';
-  position: fixed;
+  position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
-  backdrop-filter: blur(12px); /* flou sur toute la page */
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(12px);
   z-index: 0;
 }
 
@@ -28,7 +34,7 @@ body::before {
 header {
   position: relative;
   z-index: 1;
-  padding: 60px 0 20px 0;
+  padding: 60px 20px 20px 20px;
   text-align: center;
 }
 header h1, header h2 {
@@ -57,16 +63,16 @@ header h2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 40px; /* cartes plus espacées */
+  gap: 40px;
 }
 
 /* ===== NOUVELLES CARTES “PRO” ===== */
 .day-card {
-  background: rgba(255,255,255,0.85); /* semi-transparent pour fond flou */
+  background: rgba(255,255,255,0.85);
   border-radius: 20px;
   padding: 20px 15px;
-  width: 180px; /* plus fines que les anciennes */
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08); /* ombre plus subtile */
+  width: 180px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -83,7 +89,7 @@ header h2 {
   width: 100%;
   height: 6px;
   border-radius: 3px 3px 0 0;
-  background: #1e88e5; /* couleur par défaut */
+  background: #1e88e5;
   margin-bottom: 12px;
   display: block;
 }
@@ -107,13 +113,13 @@ header h2 {
   align-items: center;
 }
 .day-card .icon img {
-  transform: scale(3.2); /* icône agrandie */
+  transform: scale(3.2);
   max-width: 100%;
   max-height: 100%;
   transition: transform 0.4s ease;
 }
 .day-card:hover .icon img {
-  transform: scale(4.55); /* zoom au hover */
+  transform: scale(4.55);
 }
 
 /* ===== DESCRIPTION ===== */
@@ -124,7 +130,7 @@ header h2 {
   min-height: 40px;
 }
 
-/* ===== RESPONSIVE CARTES ===== */
+/* ===== RESPONSIVE ===== */
 @media(max-width:800px){
   .day-card{
     width:40%;
@@ -135,46 +141,33 @@ header h2 {
     width:90%;
   }
 }
-
-/* ===== RESPONSIVE HAUTEUR PAGE ===== */
-.forecast-container {
-  min-height: 400px; /* PC base */
-}
-@media(max-width:800px) {
-  .forecast-container {
-    min-height: 800px; /* tablette */
-  }
-}
-@media(max-width:500px) {
-  .forecast-container {
-    min-height: 1500px; /* mobile */
-  }
-}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Prévisions météo à trois jours</h1>
-  <h2>Prévisions expertisées et actualisées chaque jour</h2>
-</header>
+<div class="background-blur">
+  <header>
+    <h1>Prévisions météo à trois jours</h1>
+    <h2>Prévisions expertisées et actualisées chaque jour</h2>
+  </header>
 
-<div class="forecast-container">
-  <div class="forecast">
-    <div class="day-card" id="day1">
-      <div class="date" id="date1"></div>
-      <div class="icon"><img id="icon1" src=""></div>
-      <div class="desc" id="desc1"></div>
-    </div>
-    <div class="day-card" id="day2">
-      <div class="date" id="date2"></div>
-      <div class="icon"><img id="icon2" src=""></div>
-      <div class="desc" id="desc2"></div>
-    </div>
-    <div class="day-card" id="day3">
-      <div class="date" id="date3"></div>
-      <div class="icon"><img id="icon3" src=""></div>
-      <div class="desc" id="desc3"></div>
+  <div class="forecast-container">
+    <div class="forecast">
+      <div class="day-card" id="day1">
+        <div class="date" id="date1"></div>
+        <div class="icon"><img id="icon1" src=""></div>
+        <div class="desc" id="desc1"></div>
+      </div>
+      <div class="day-card" id="day2">
+        <div class="date" id="date2"></div>
+        <div class="icon"><img id="icon2" src=""></div>
+        <div class="desc" id="desc2"></div>
+      </div>
+      <div class="day-card" id="day3">
+        <div class="date" id="date3"></div>
+        <div class="icon"><img id="icon3" src=""></div>
+        <div class="desc" id="desc3"></div>
+      </div>
     </div>
   </div>
 </div>
