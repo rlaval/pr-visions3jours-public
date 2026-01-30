@@ -28,7 +28,7 @@ header {
   position: relative;
   z-index: 1;
   padding: 60px 0 20px 0;
-  text-align: center; /* centré par rapport aux cartes */
+  text-align: center;
 }
 header h1, header h2 {
   color: #fff;
@@ -56,63 +56,83 @@ header h2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 60px; /* cartes plus espacées */
+  gap: 40px; /* un peu plus espacées */
 }
 
-/* ===== CARTES DES JOURS ===== */
+/* ===== NOUVELLES CARTES “PRO” ===== */
 .day-card {
-  background: linear-gradient(145deg,#ffffff,#f1f5f9);
-  border-radius: 25px;
-  padding: 25px 15px;
-  width: 230px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.85); /* semi-transparent pour fond flou */
+  border-radius: 20px;
+  padding: 20px 15px;
+  width: 180px; /* plus fines que les anciennes */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08); /* ombre plus subtile */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .day-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 35px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ===== BARRE SUPÉRIEURE COULEUR MÉTÉO ===== */
+.day-card::before {
+  content:'';
+  width: 100%;
+  height: 6px;
+  border-radius: 3px 3px 0 0;
+  background: #1e88e5; /* couleur par défaut, on pourra changer selon condition */
+  margin-bottom: 12px;
+  display: block;
 }
 
 /* ===== DATE ===== */
 .day-card .date {
   font-weight: 700;
   color: #000;
-  margin-bottom: 20px;
-  font-size: 18px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
 }
 
 /* ===== ICÔNES ===== */
 .day-card .icon {
-  width: 160px;
-  height: 160px;
-  margin: 0 auto 15px;
-  transition: transform 0.4s ease;
+  width: 100px;  /* garde la carte compacte */
+  height: 100px;
+  margin-bottom: 0; /* moins d’espace autour */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .day-card .icon img {
+  transform: scale(3.2); /* icône agrandie sans toucher à la carte */
   max-width: 100%;
-  height: auto;
+  max-height: 100%;
   transition: transform 0.4s ease;
 }
 .day-card:hover .icon img {
-  transform: scale(1.15);
+  transform: scale(4.55); /* zoom au hover */
 }
+
 
 /* ===== DESCRIPTION ===== */
 .day-card .desc {
-  font-size: 15px;
+  font-size: 14px;
   color: #555;
-  min-height: 50px;
+  text-align: center;
+  min-height: 40px;
 }
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:800px){
   .day-card{
-    width:45%;
+    width:40%;
   }
 }
 @media(max-width:500px){
   .day-card{
-    width:100%;
+    width:90%;
   }
 }
 </style>
