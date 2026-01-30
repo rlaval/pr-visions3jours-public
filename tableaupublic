@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prévisions météo à trois jours – MeteoAveyron</title>
+<style>
+/* ===== TYPOGRAPHIE ET FOND ===== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  text-align: center;
+}
+h1 {
+  font-size: 32px;
+  color: #1e88e5;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+h2 {
+  font-size: 18px;
+  color: #555;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
+
+/* ===== CONTAINER 3 JOURS ===== */
+.forecast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* ===== CARTES DES JOURS ===== */
+.day-card {
+  background: linear-gradient(145deg,#ffffff,#f1f5f9);
+  border-radius: 25px;
+  padding: 25px 15px;
+  width: 230px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.day-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.15);
+}
+
+/* ===== DATE ===== */
+.day-card .date {
+  font-weight: 700;
+  color: #000; /* noir */
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+/* ===== ICÔNES ===== */
+.day-card .icon {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 15px;
+  transition: transform 0.4s ease;
+}
+.day-card .icon img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.4s ease;
+}
+.day-card:hover .icon img {
+  transform: scale(1.15); /* grandit légèrement au hover */
+}
+
+/* ===== DESCRIPTION ===== */
+.day-card .desc {
+  font-size: 15px;
+  color: #555;
+  min-height: 50px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:800px){
+  .day-card{
+    width:45%;
+  }
+}
+@media(max-width:500px){
+  .day-card{
+    width:100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<h1>Prévisions météo à trois jours</h1>
+<h2>Prévisions expertisées et actualisées chaque jour</h2>
+
+<div class="forecast">
+  <div class="day-card" id="day1">
+    <div class="date" id="date1"></div>
+    <div class="icon"><img id="icon1" src=""></div>
+    <div class="desc" id="desc1"></div>
+  </div>
+  <div class="day-card" id="day2">
+    <div class="date" id="date2"></div>
+    <div class="icon"><img id="icon2" src=""></div>
+    <div class="desc" id="desc2"></div>
+  </div>
+  <div class="day-card" id="day3">
+    <div class="date" id="date3"></div>
+    <div class="icon"><img id="icon3" src=""></div>
+    <div class="desc" id="desc3"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCYida0D9BAlCHrT8h3eAZ20ldGlENE_GQ",
+  authDomain: "previsions3jours.firebaseapp.com",
+  projectId: "previsions3jours",
+  storageBucket: "previsions3jours.firebasestorage.app",
+  messagingSenderId: "631726155100",
+  appId: "1:631726155100:web:449182b690a1b485864d99",
+  measurementId: "G-GJBY1Q413Z"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const conditions = {
+  soleil:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-high-5ydohv.png"},
+  soleil_nuages:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-et-nuage-high.png"},
+  eclaircies:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/eclaircies-high.png"},
+  nuageux:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/nuageux-high-nctmr4.png"},
+  averses_localisées:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-pluvieux-high-qpysrh.png"},
+  pluie_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-faible-high-lwo4k5.png"},
+  pluie_moderee:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-mod-r-high-omk8vs.png"},
+  pluie_forte:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-forte-high.png"},
+  orage:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-high-2ijlyg.png"},
+  orage_isolé:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-orageux-high-6ppgfs.png"},
+  orage_violent:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-fort-high.png"},
+  neige_localisée:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-claircies-high-ajzfn1.png"},
+  neige_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-faible-high-goeaq0.png"},
+  neige_modere:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-mod-r-high-hw687j.png"},
+  neige_forte:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-forte-high.png"},
+  pluie_neige:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/copie_de_copie_de_aesthetic_phone_mockup_instagram_post__9_-removebg-preview-high.png"},
+  vent_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste-removebg-preview-high.png"},
+  vent_modere:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__1_-removebg-preview-high-062t0p.png"},
+  vent_fort:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__2_-removebg-preview-removebg-preview-high.png"},
+  vent_tres_fort:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__3_-removebg-preview-high.png"}
+};
+
+function listenForecast(i){
+  const docRef = doc(db,"previsions3jours","jour"+i);
+  onSnapshot(docRef,(snap)=>{
+    if(snap.exists()){
+      const data = snap.data();
+      if(data.date){
+        const d = new Date(data.date);
+        const options = {weekday:'short',day:'numeric',month:'short'};
+        document.getElementById("date"+i).textContent = d.toLocaleDateString('fr-FR', options);
+      }
+      document.getElementById("icon"+i).src = conditions[data.condition]?.icon || "";
+      document.getElementById("desc"+i).textContent = data.description || "";
+    }
+  });
+}
+
+// Écoute temps réel pour les 3 jours
+[1,2,3].forEach(listenForecast);
+</script>
+
+</body>
+</html>
