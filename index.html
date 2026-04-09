@@ -5,173 +5,130 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prévisions météo à trois jours – MeteoAveyron</title>
 <style>
-/* ===== TYPOGRAPHIE ET FOND GLOBAL ===== */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
-
-/* CONTENEUR DU FOND FLOU */
-.background-blur {
   position: relative;
-  background: url('https://upload.wikimedia.org/wikipedia/commons/b/be/Paysage_de_l%27Aubrac.jpg') center/cover no-repeat;
-  overflow: hidden;
-  max-height: 100vh; /* limite la hauteur sur mobile */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin:0;
+  padding:0;
+  color:#333;
+  overflow-x: hidden;
 }
 
-.background-blur::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
+body::before {
+  content: "";
+  position: fixed; /* toujours visible en arrière-plan */
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(5px);
-  z-index: 0;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/b/be/Paysage_de_l%27Aubrac.jpg') center/cover no-repeat;
+  background-size: cover;
+  filter: blur(6px); /* intensité du flou, à ajuster */
+  z-index: -1; /* derrière tout le contenu */
 }
-
-/* ===== HEADER ===== */
 header {
-  position: relative;
-  z-index: 1;
-  padding: 60px 20px 20px 20px;
-  text-align: center;
-}
-header h1, header h2 {
-  color: #fff;
-  margin: 0;
-}
-header h1 {
-  font-size: 36px;
-  letter-spacing: 1px;
+  text-align:center;
+  padding:40px 20px 20px;
+  color:#fff;
   text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
 }
-header h2 {
-  font-size: 20px;
-  font-weight: 400;
-  margin-top: 10px;
- text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-}
+header h1 { font-size:36px; margin:0; letter-spacing:1px; }
+header h2 { font-size:20px; margin-top:10px; font-weight:400; }
 
-/* ===== CONTAINER 3 JOURS ===== */
 .forecast-container {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  padding: 40px 20px;
-}
-.forecast {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:40px;
+  padding:20px;
 }
 
-/* ===== NOUVELLES CARTES “PRO” ===== */
 .day-card {
-  background: rgba(255,255,255,0.85);
+  position: relative;
+  width: 400px;
+  height: 450px;
   border-radius: 20px;
-  padding: 20px 15px;
-  width: 180px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.day-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  overflow:hidden;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/9/9b/Aveyron_department_relief_location_map.jpg') center/cover no-repeat;
+  background-size: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:10px;
 }
 
-/* ===== BARRE SUPÉRIEURE COULEUR MÉTÉO ===== */
-.day-card::before {
-  content:'';
-  width: 100%;
-  height: 6px;
-  border-radius: 3px 3px 0 0;
-  background: #1e88e5;
-  margin-bottom: 12px;
-  display: block;
+.day-title {
+  color:#000;
+  font-weight:700;
+  font-size:18px;
+  text-align:center;
+  background: rgba(255,255,255,0.6);
+  width:100%;
+  padding:5px 0;
+  border-radius:10px;
+  margin-bottom:5px;
 }
 
-/* ===== DATE ===== */
-.day-card .date {
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 12px;
-  font-size: 16px;
-  text-align: center;
+.city-icon {
+  position:absolute;
+  width:500px; /* icône agrandie */
+  height:auto;
+  transform: translate(-50%,-50%);
 }
 
-/* ===== ICÔNES ===== */
-.day-card .icon {
-  width: 100px;
-  height: 100px;
-  margin-bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Température max avec flèche */
+.temp-max {
+  position:absolute;
+  bottom:10px;
+  left:15%;
+  transform: translateX(-50%);
+  font-size:18px;
+  font-weight:700;
+  background: rgba(255,255,255,0.6);
+  padding:5px 10px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  gap:5px;
 }
-.day-card .icon img {
-  transform: scale(3.2);
-  max-width: 100%;
-  max-height: 100%;
-  transition: transform 0.4s ease;
-}
-.day-card:hover .icon img {
-  transform: scale(4.55);
-}
-
-/* ===== DESCRIPTION ===== */
-.day-card .desc {
-  font-size: 14px;
-  color: #555;
-  text-align: center;
-  min-height: 40px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media(max-width:800px){
-  .day-card{
-    width:40%;
-  }
-}
-@media(max-width:500px){
-  .day-card{
-    width:90%;
-  }
+.temp-max .arrow {
+  font-size:16px;
 }
 </style>
 </head>
 <body>
+<header>
+<h1>Prévisions météo à trois jours - Aveyron</h1>
+<h2>Prévisions analysées et actualisées chaque jour</h2>
+</header>
 
-<div class="background-blur">
-  <header>
-    <h1>Prévisions météo à trois jours</h1>
-    <h2>Prévisions expertisées et actualisées chaque jour</h2>
-  </header>
+<div class="forecast-container">
+  <!-- Jour 1 -->
+  <div class="day-card" id="day1">
+    <div class="day-title" id="date1">Jour 1</div>
+    <img id="decazeville1" class="city-icon" src="" style="top:45%; left:20%;">
+    <img id="millau1" class="city-icon" src="" style="top:70%; left:70%;">
+    <img id="mur1" class="city-icon" src="" style="top:28%; left:55%;">
+    <div class="temp-max" id="temp1">max <span class="arrow">↑</span><span id="tempval1">0°C</span></div>
+  </div>
 
-  <div class="forecast-container">
-    <div class="forecast">
-      <div class="day-card" id="day1">
-        <div class="date" id="date1"></div>
-        <div class="icon"><img id="icon1" src=""></div>
-        <div class="desc" id="desc1"></div>
-      </div>
-      <div class="day-card" id="day2">
-        <div class="date" id="date2"></div>
-        <div class="icon"><img id="icon2" src=""></div>
-        <div class="desc" id="desc2"></div>
-      </div>
-      <div class="day-card" id="day3">
-        <div class="date" id="date3"></div>
-        <div class="icon"><img id="icon3" src=""></div>
-        <div class="desc" id="desc3"></div>
-      </div>
-    </div>
+  <!-- Jour 2 -->
+  <div class="day-card" id="day2">
+    <div class="day-title" id="date2">Jour 2</div>
+    <img id="decazeville2" class="city-icon" src="" style="top:45%; left:20%;">
+    <img id="millau2" class="city-icon" src="" style="top:70%; left:70%;">
+    <img id="mur2" class="city-icon" src="" style="top:28%; left:55%;">
+    <div class="temp-max" id="temp2">max <span class="arrow">↑</span><span id="tempval2">0°C</span></div>
+  </div>
+
+  <!-- Jour 3 -->
+  <div class="day-card" id="day3">
+    <div class="day-title" id="date3">Jour 3</div>
+    <img id="decazeville3" class="city-icon" src="" style="top:45%; left:20%;">
+    <img id="millau3" class="city-icon" src="" style="top:70%; left:70%;">
+    <img id="mur3" class="city-icon" src="" style="top:28%; left:55%;">
+    <div class="temp-max" id="temp3">max <span class="arrow">↑</span><span id="tempval3">0°C</span></div>
   </div>
 </div>
 
@@ -193,47 +150,66 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const conditions = {
-  soleil:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-high-5ydohv.png"},
-  soleil_nuages:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-et-nuage-high.png"},
-  eclaircies:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/eclaircies-high.png"},
-  nuageux:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/nuageux-high-nctmr4.png"},
-  averses_localisées:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-pluvieux-high-qpysrh.png"},
-  pluie_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-faible-high-lwo4k5.png"},
-  pluie_moderee:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-mod-r-high-omk8vs.png"},
-  pluie_forte:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-forte-high.png"},
-  orage:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-high-2ijlyg.png"},
-  orage_isolé:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-orageux-high-6ppgfs.png"},
-  orage_violent:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-fort-high.png"},
-  neige_localisée:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-claircies-high-ajzfn1.png"},
-  neige_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-faible-high-goeaq0.png"},
-  neige_modere:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-mod-r-high-hw687j.png"},
-  neige_forte:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-forte-high.png"},
-  pluie_neige:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/copie_de_copie_de_aesthetic_phone_mockup_instagram_post__9_-removebg-preview-high.png"},
-  vent_faible:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste-removebg-preview-high.png"},
-  vent_modere:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__1_-removebg-preview-high-062t0p.png"},
-  vent_fort:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__2_-removebg-preview-removebg-preview-high.png"},
-  vent_tres_fort:{icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__3_-removebg-preview-high.png"}
+soleil:{label:"Ensoleillé",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-high-5ydohv.png"},
+  soleil_nuages:{label:"Soleil et nuages",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/soleil-et-nuage-high.png"},
+  eclaircies:{label:"Éclaircies",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/eclaircies-high.png"},
+  nuageux:{label:"Nuageux",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/nuageux-high-nctmr4.png"},
+
+  averses_localisées:{label:"Averses localisées",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-pluvieux-high-qpysrh.png"},
+  pluie_faible:{label:"Pluie faible",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-faible-high-lwo4k5.png"},
+  pluie_moderee:{label:"Pluie modérée",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-mod-r-high-omk8vs.png"},
+  pluie_forte:{label:"Pluie forte",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/pluie-forte-high.png"},
+
+  orage:{label:"Orages",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-high-2ijlyg.png"},
+  orage_isolé:{label:"Orages isolés",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/passages-orageux-high-6ppgfs.png"},
+  orage_violent:{label:"Orages violents",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/orage-fort-high.png"},
+
+  neige_localisée:{label:"Neige localisée",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-claircies-high-ajzfn1.png"},
+  neige_faible:{label:"Neige faible",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-faible-high-goeaq0.png"},
+  neige_modere:{label:"Neige modérée",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-mod-r-high-hw687j.png"},
+  neige_forte:{label:"Neige forte",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/neige-forte-high.png"},
+
+  pluie_neige:{label:"Pluie et neige mêlées",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/copie_de_copie_de_aesthetic_phone_mockup_instagram_post__9_-removebg-preview-high.png"},
+
+  vent_faible:{label:"Vent faible",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste-removebg-preview-high.png"},
+  vent_modere:{label:"Vent modéré",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__1_-removebg-preview-high-062t0p.png"},
+  vent_fort:{label:"Vent fort",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__2_-removebg-preview-removebg-preview-high.png"},
+  vent_tres_fort:{label:"Vent très fort",icon:"https://primary.jwwb.nl/public/q/t/q/temp-uozhroxmecrdemnjgoky/logo_initiale_marron-_gourmand_-l-gant_minimaliste__3_-removebg-preview-high.png"},
 };
 
-function listenForecast(i){
-  const docRef = doc(db,"previsions3jours","jour"+i);
-  onSnapshot(docRef,(snap)=>{
-    if(snap.exists()){
-      const data = snap.data();
-      if(data.date){
-        const d = new Date(data.date);
-        const options = {weekday:'short',day:'numeric',month:'short'};
-        document.getElementById("date"+i).textContent = d.toLocaleDateString('fr-FR', options);
+function updateDay(day){
+  const docRef = doc(db,"previsions3jours","jour"+day);
+  onSnapshot(docRef,snap=>{
+    const data = snap.data();
+    if(!data) return;
+
+    // Dates
+    const d = data.date ? new Date(data.date) : null;
+    if(d) {
+      document.getElementById("date"+day).textContent = d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+    }
+
+    // Icônes villes
+    ["decazeville","millau","mur"].forEach(city=>{
+      const el = document.getElementById(city+day);
+      if(el && data[city]){
+        el.src = conditions[data[city]]?.icon || "";
       }
-      document.getElementById("icon"+i).src = conditions[data.condition]?.icon || "";
-      document.getElementById("desc"+i).textContent = data.description || "";
+    });
+
+    // Temp max
+    if(data.temp_max != null){
+      const tempEl = document.getElementById("tempval"+day);
+      const arrowEl = document.querySelector("#temp"+day+" .arrow");
+      tempEl.textContent = data.temp_max+"°C";
+      arrowEl.textContent = data.temp_max_arrow === "up" ? "↑" : "↓";
+      arrowEl.style.color = data.temp_max_arrow === "up" ? "red" : "blue";
     }
   });
 }
 
-// Écoute temps réel pour les 3 jours
-[1,2,3].forEach(listenForecast);
+// Mettre à jour les 3 jours
+[1,2,3].forEach(updateDay);
 </script>
-
 </body>
 </html>
